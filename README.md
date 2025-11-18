@@ -1,5 +1,7 @@
 ﻿[![Gitter](https://badges.gitter.im/QUIKSharp/community.svg)](https://gitter.im/QUIKSharp/community)
 
+This repository is not the main one. This is a modified version that is used in OsEngine. Main repository: https://github.com/finsight/QUIKSharp
+
 QUIK#
 ==========
 QUIK# (QUIK Sharp) is the QUIK Lua interface ported to .NET.
