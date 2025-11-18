@@ -302,7 +302,6 @@ namespace QuikSharp
                         {
                             Trace.TraceError($"Response processing failed: {ex.ToString()}");
                             _cts.Cancel();
-                            //throw new AggregateException("Unhandled exception in background task", e);
                         }
                         finally
                         {
@@ -383,7 +382,7 @@ namespace QuikSharp
                                                     Trace.Assert(message.Id.HasValue && message.Id > 0);
                                                     // it is a response message
                                                     if (!Responses.ContainsKey(message.Id.Value))
-                                                        throw new ApplicationException("Unexpected correlation ID");
+                                                        return;
                                                     KeyValuePair<TaskCompletionSource<IMessage>, Type> tcs;
                                                     Responses.TryRemove(message.Id.Value, out tcs);
 
@@ -420,7 +419,6 @@ namespace QuikSharp
                                             }, response, TaskCreationOptions.PreferFairness);
                                         }
                                     }
-
                                 }
                                 catch (IOException ex)
                                 {
@@ -453,7 +451,6 @@ namespace QuikSharp
                         {
                             Trace.TraceError(e.ToString());
                             _cts.Cancel();
-                            //throw new AggregateException("Unhandled exception in background task", e);
                         }
                         finally
                         {
@@ -509,7 +506,7 @@ namespace QuikSharp
 
                                             if (callback == null)
                                             {
-                                                throw new IOException("Lua returned an empty response or closed the connection");
+                                                Trace.TraceError("Lua returned an empty response or closed the connection");
                                             }
 
                                             try
@@ -563,7 +560,6 @@ namespace QuikSharp
                         {
                             Trace.TraceError($"Response processing failed: {ex.ToString()}");
                             _cts.Cancel();
-                            //throw new AggregateException("Unhandled exception in background task", e);
                         }
 
                         finally
@@ -738,8 +734,8 @@ namespace QuikSharp
         {
             if (message == null)
             {
-                Trace.WriteLine("Trace: ProcessCallbackMessage(). message = NULL");
-                throw new ArgumentNullException(nameof(message));
+                Trace.TraceError("Trace: ProcessCallbackMessage(). message = NULL");
+                return;
             }
 
             var parsed = Enum.TryParse(message.Command, ignoreCase: true, out EventNames eventName);
@@ -899,7 +895,7 @@ namespace QuikSharp
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return;
                 }
             }
             else
@@ -913,7 +909,8 @@ namespace QuikSharp
                         break;
 
                     default:
-                        throw new InvalidOperationException("Unknown command in a message: " + message.Command);
+                        Trace.TraceError("Unknown command in a message: " + message.Command);
+                        return;
                 }
             }
         }
@@ -1028,7 +1025,8 @@ namespace QuikSharp
                     else
                     {
                         // timeout
-                        throw new TimeoutException("Send operation timed out");
+                        Trace.TraceError("Send operation timed out");
+                        return null;
                     }
                 }
                 else

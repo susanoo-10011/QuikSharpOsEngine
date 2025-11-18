@@ -9,6 +9,7 @@ using QuikSharp.DataStructures.Transaction;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -367,7 +368,7 @@ namespace QuikSharp
                             return new Message<Candle> { Data = new Candle() };
 
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            return new Message<string>();
                     }
                 }
                 else
@@ -379,13 +380,14 @@ namespace QuikSharp
                             return new Message<string>();
 
                         default:
-                            //return (IMessage)Activator.CreateInstance(typeof(Message<string>));
-                            throw new InvalidOperationException("Unknown command in a message: " + cmd);
+                            Trace.TraceError("Unknown command in a message: " + cmd);
+                            return new Message<string>();
                     }
                 }
             }
 
-            throw new ArgumentException("Bad message format: no cmd or lua_error fields");
+            Trace.TraceError("Bad message format: no cmd or lua_error fields");
+            return new Message<string>();
         }
 
         private static bool FieldExists(string fieldName, JObject jObject)
