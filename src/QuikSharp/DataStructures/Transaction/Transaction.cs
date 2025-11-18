@@ -23,6 +23,8 @@ namespace QuikSharp.DataStructures.Transaction
 
         internal void OnTransReplyCall(TransactionReply reply)
         {
+            if (OnTransReply == null) return;
+
             OnTransReply?.Invoke(reply);
             // this should happen only once per transaction id
             Trace.Assert(TransactionReply == null);
