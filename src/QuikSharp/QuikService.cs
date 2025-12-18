@@ -349,6 +349,7 @@ namespace QuikSharp
                                             }
                                             catch (Exception ex)
                                             {
+                                                Trace.TraceError($"Response task error: {ex.ToString()}");
                                                 break;
                                             }
 
@@ -1089,6 +1090,7 @@ namespace QuikSharp
             }
             catch (Exception ex)
             {
+                Trace.TraceError(ex.ToString());
                 return null;
             }
         }
