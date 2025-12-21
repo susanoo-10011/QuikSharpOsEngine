@@ -284,9 +284,9 @@ namespace QuikSharp
                                 {
                                     Trace.TraceError($"Response processing failed: {ex.ToString()}");
                                 }
-                                catch (TaskCanceledException ex)
+                                catch (OperationCanceledException)
                                 {
-                                    Trace.TraceError($"Response read faulted: {ex.ToString()}");
+                                    // ignore
                                 }
                                 catch (Exception ex)
                                 {
@@ -296,7 +296,7 @@ namespace QuikSharp
                         }
                         catch (OperationCanceledException)
                         {
-                            Trace.TraceInformation("Request task is cancelling");
+                            //ignore
                         }
                         catch (Exception ex)
                         {
@@ -346,6 +346,10 @@ namespace QuikSharp
                                             try
                                             {
                                                 response = await reader.ReadLineAsync(_cts.Token).ConfigureAwait(false);
+                                            }
+                                            catch (OperationCanceledException)
+                                            {
+                                                break;
                                             }
                                             catch (Exception ex)
                                             {
@@ -401,10 +405,10 @@ namespace QuikSharp
                                                 {
                                                     Trace.TraceError(e.ToString());
                                                 }
-                                                catch (TaskCanceledException ex)
+                                                catch (OperationCanceledException)
                                                 {
-                                                    Trace.TraceError($"Response read faulted: {ex.ToString()}");
-                                                } // Это исключение возникнет при отмене ReadLineAsync через Cancellation Token
+                                                    //ignore
+                                                }
                                                 catch (IOException ex)
                                                 {
                                                     Trace.TraceError($"Response processing failed: {ex.ToString()}");
@@ -425,10 +429,10 @@ namespace QuikSharp
                                 {
                                     Trace.TraceError($"Response processing failed: {ex.ToString()}");
                                 }
-                                catch (TaskCanceledException ex)
+                                catch (OperationCanceledException)
                                 {
-                                    Trace.TraceError($"Response read faulted: {ex.ToString()}");
-                                } // Это исключение возникнет при отмене ReadLineAsync через Cancellation Token
+                                    //ignore
+                                } 
                                 catch (SocketException socketEx)
                                 {
                                     Trace.TraceError($"Socket exception: {socketEx.ToString()}");
@@ -446,7 +450,7 @@ namespace QuikSharp
                         }
                         catch (OperationCanceledException)
                         {
-                            Trace.TraceInformation("Response task is cancelling");
+                            //ignore
                         }
                         catch (Exception e)
                         {
@@ -521,6 +525,10 @@ namespace QuikSharp
                                             {
                                                 Trace.TraceError($"Response processing failed: {ex.ToString()}");
                                             }
+                                            catch (OperationCanceledException)
+                                            {
+                                                //ignore
+                                            }
                                             catch (SocketException socketEx)
                                             {
                                                 Trace.TraceError($"Socket exception: {socketEx.ToString()}");
@@ -551,7 +559,7 @@ namespace QuikSharp
                         }
                         catch (OperationCanceledException)
                         {
-                            Trace.TraceInformation("Callback task is cancelling");
+                            //ignore
                         }
                         catch (SocketException ex)
                         {
@@ -607,6 +615,7 @@ namespace QuikSharp
                             }
                             catch (OperationCanceledException)
                             {
+                                // ignore
                             }
                             catch (Exception ex)
                             {
