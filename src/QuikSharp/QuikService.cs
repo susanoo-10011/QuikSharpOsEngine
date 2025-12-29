@@ -517,7 +517,12 @@ namespace QuikSharp
                                             try
                                             {
                                                 var message = callback.FromJson(this);
-                                                Trace.Assert(!(message.Id.HasValue && message.Id > 0));
+
+                                                if(!(message.Id.HasValue && message.Id > 0))
+                                                {
+                                                    continue;
+                                                }
+
                                                 // it is a callback message
                                                 await _receivedCallbacksChannel.Writer.WriteAsync(message);
                                             }
@@ -774,17 +779,14 @@ namespace QuikSharp
                         break;
 
                     case EventNames.OnCleanUp:
-                        Trace.Assert(message is Message<string>);
                         Events.OnCleanUpCall();
                         break;
 
                     case EventNames.OnClose:
-                        Trace.Assert(message is Message<string>);
                         Events.OnCloseCall();
                         break;
 
                     case EventNames.OnConnected:
-                        Trace.Assert(message is Message<string>);
                         Events.OnConnectedCall();
                         break;
 
@@ -801,7 +803,6 @@ namespace QuikSharp
                         break;
 
                     case EventNames.OnDisconnected:
-                        Trace.Assert(message is Message<string>);
                         Events.OnDisconnectedCall();
                         break;
 
