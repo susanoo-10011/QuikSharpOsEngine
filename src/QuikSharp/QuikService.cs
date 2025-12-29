@@ -432,7 +432,7 @@ namespace QuikSharp
                                 catch (OperationCanceledException)
                                 {
                                     //ignore
-                                } 
+                                }
                                 catch (SocketException socketEx)
                                 {
                                     Trace.TraceError($"Socket exception: {socketEx.ToString()}");
@@ -512,16 +512,14 @@ namespace QuikSharp
                                             if (callback == null)
                                             {
                                                 Trace.TraceError("Lua returned an empty response or closed the connection");
+                                                continue;
                                             }
 
                                             try
                                             {
                                                 var message = callback.FromJson(this);
 
-                                                if(!(message.Id.HasValue && message.Id > 0))
-                                                {
-                                                    continue;
-                                                }
+                                                Trace.Assert(!(message.Id.HasValue && message.Id > 0));
 
                                                 // it is a callback message
                                                 await _receivedCallbacksChannel.Writer.WriteAsync(message);
