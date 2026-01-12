@@ -1015,7 +1015,7 @@ namespace QuikSharp
         /// </summary>
         public TimeSpan DefaultSendTimeout { get; set; } = Timeout.InfiniteTimeSpan;
 
-        internal async Task<TResponse> Send<TResponse>(IMessage request, int timeout = 5000)
+        internal async Task<TResponse> Send<TResponse>(IMessage request, int timeout = 0)
             where TResponse : class, IMessage, new()
         {
             try
