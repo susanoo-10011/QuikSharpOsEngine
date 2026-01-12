@@ -241,9 +241,7 @@ namespace QuikSharp
                                                 else
                                                 {
                                                     Trace.Assert(message.Id.HasValue, "All requests must have correlation id");
-                                                    Responses[message.Id.Value]
-                                                        .Key.SetException(
-                                                            new TimeoutException("ValidUntilUTC is less than current time"));
+                                                    Responses[message.Id.Value].Key.SetException(new TimeoutException("ValidUntilUTC is less than current time"));
                                                     KeyValuePair<TaskCompletionSource<IMessage>, Type> tcs; // <IMessage>
                                                     Responses.TryRemove(message.Id.Value, out tcs);
                                                 }
@@ -1015,7 +1013,7 @@ namespace QuikSharp
         /// </summary>
         public TimeSpan DefaultSendTimeout { get; set; } = Timeout.InfiniteTimeSpan;
 
-        internal async Task<TResponse> Send<TResponse>(IMessage request, int timeout = 0)
+        internal async Task<TResponse> Send<TResponse>(IMessage request, int timeout = 30000)
             where TResponse : class, IMessage, new()
         {
             try
