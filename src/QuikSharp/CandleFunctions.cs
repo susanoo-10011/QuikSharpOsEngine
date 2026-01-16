@@ -114,7 +114,7 @@ namespace QuikSharp
             try
             {
                 var message = new Message<string>(classCode + "|" + securityCode + "|" + (int)interval + "|" + param + "|" + count, "get_candles_from_data_source");
-                Message<List<Candle>> response = await QuikService.Send<Message<List<Candle>>>(message).ConfigureAwait(false);
+                Message<List<Candle>> response = await QuikService.Send<Message<List<Candle>>>(message, 120000).ConfigureAwait(false);
                 return response.Data;
             }
             catch (Exception) { return null; }
