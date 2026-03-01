@@ -73,8 +73,8 @@ namespace QuikSharp
             _responsePort = responsePort;
             _callbackPort = _responsePort + 1;
             _host = IPAddress.Parse(host);
-            Start();
             Events = new QuikEvents(this);
+            Start();
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ namespace QuikSharp
                                 Trace.WriteLine("Connecting on callback channel... ");
                                 EnsureConnectedClient(_cts.Token);
                                 // now we are connected
-                                this.Events.OnConnectedToQuikCall(_responsePort); // Оповещаем клиента что произошло подключение к Quik'у
+                                this.Events?.OnConnectedToQuikCall(_responsePort); // Оповещаем клиента что произошло подключение к Quik'у
                                 _connectedMre.Set();
 
                                 // here we have a connected TCP client
