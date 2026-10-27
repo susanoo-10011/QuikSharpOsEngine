@@ -252,9 +252,8 @@ namespace QuikSharp
                                             }
                                             catch (IOException)
                                             {
-                                                // this catch is for unexpected and unchecked connection termination
-                                                // add back, there was an error while writing
-                                                if (message != null)
+                                                // Retry queries only: a transaction may already have reached QUIK.
+                                                if (message != null && message.Command != "sendTransaction")
                                                 {
                                                     EnvelopeQueue.Add(message);
                                                 }
@@ -265,7 +264,7 @@ namespace QuikSharp
                                             {
                                                 // Обработка SocketException
                                                 Trace.TraceError($"Socket exception: {ex.ToString()}");
-                                                if (message != null)
+                                                if (message != null && message.Command != "sendTransaction")
                                                 {
                                                     EnvelopeQueue.Add(message);
                                                 }
